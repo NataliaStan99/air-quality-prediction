@@ -1,81 +1,99 @@
-DOKUMENTACJA TECHNICZNA PROJEKTU  
+Cel projektu
 
-1. Cel projektu 
+Aplikacja pobiera w czasie rzeczywistym dane o jakości powietrza i warunkach pogodowych z serwisu OpenWeatherMap.
+Umożliwia:
 
-Aplikacja pobiera w czasie rzeczywistym dane o jakości powietrza i warunkach pogodowych z serwisu OpenWeatherMap. Umożliwia: 
+wyświetlanie bieżących danych PM2.5 dla wybranego miasta,
 
-wyświetlanie bieżących danych PM2.5 dla wybranego miasta, 
+automatyczne odświeżanie wyników co 60 sekund,
 
-automatyczne odświeżanie co 60 sekund, 
+symulację wpływu zmian temperatury, wilgotności i prędkości wiatru na prognozę jakości powietrza.
 
-symulację wpływu zmian temperatury, wilgotności i prędkości wiatru na prognozę jakości powietrza. 
+Projekt jest przykładem rozwiązania z zakresu Internetu Rzeczy (IoT), integrującym dane z czujników dostępnych online, wykorzystującym elementy RAG i Publishera.
 
-Projekt jest przykładem rozwiązania z zakresu Internetu Rzeczy (IoT), integrującym dane z czujników dostępnych online. 
 
- 
+Architektura procesowa
 
-2. Architektura rozwiązania 
+ [Źródła danych: API OpenWeatherMap] 
+        │
+        ▼
+ [Publisher - pobranie danych]
+        │
+        ▼
+ [Przetwarzanie i normalizacja - normalizer.py]
+        │
+        ▼
+ [RAG - wykorzystanie danych historycznych i bieżących]
+        │
+        ▼
+ [Model uproszczonej prognozy jakości powietrza - app.py]
+        │
+        ▼
+ [Streamlit - prezentacja wyników]
+        │
+        ▼
+ [Autorefresh - streamlit-autorefresh (60 sekund)]
 
-Źródła danych (Retrieve): 
 
-Air Pollution API (PM2.5), 
+Opis kroków:
 
-Weather API (temperatura, wilgotność, wiatr). 
+Retrieve (R) – dane PM2.5 i pogodowe (temperatura, wilgotność, wiatr) są pobierane z API OpenWeatherMap.
 
-Analiza i prognoza (Augment): 
+Augment (A) – dane są przetwarzane, normalizowane i uzupełniane o kontekst historyczny (RAG).
 
-Dane bieżące są przetwarzane, 
+Generate (G) – model ML oblicza prognozę jakości powietrza.
 
-Użytkownik może zmienić parametry pogodowe i zobaczyć wpływ na jakość powietrza. 
+Publisher – Streamlit publikuje wynik w czasie rzeczywistym do użytkownika końcowego.
 
-Prezentacja danych (Generate + Publisher): 
+Autorefresh – dashboard automatycznie odświeża dane co 60 sekund.
 
-Wyniki są publikowane w czasie rzeczywistym w aplikacji Streamlit, 
 
-Dane odświeżają się automatycznie co 60 sekund, pełniąc rolę Publishera dla konsumenta końcowego (studenta/użytkownika). 
+Architektura technologiczna
 
- 
+[Pliki CSV / API OpenWeatherMap]
+           │
+           ▼
+  [Publisher - requests do API]
+           │
+           ▼
+  [normalizer.py - czyszczenie i standaryzacja danych]
+           │
+           ▼
+  [app.py - logika prognozy, RAG, model ML]
+           │
+           ▼
+  [Streamlit - interfejs webowy + API aplikacji]
+           │
+           ▼
+  [streamlit-autorefresh - cykliczne odświeżanie dashboardu]
 
-3. Instalacja i uruchomienie 
 
-Instalacja bibliotek: 
+Struktura repozytorium
 
-pip install streamlit requests pandas 
- 
+app.py – główny plik aplikacji Streamlit (pobieranie danych, prognoza jakości powietrza, wizualizacja).
 
-Uruchomienie aplikacji: 
+normalizer.py – preprocessing: czyszczenie i standaryzacja danych pogodowych i jakości powietrza.
 
-streamlit run app.py 
- 
+scenariusz.md – opis scenariusza użycia aplikacji i eksperymentów.
 
- 
+requirements.txt – lista bibliotek potrzebnych do uruchomienia projektu.
 
-4. Ograniczenia 
+run_app.bat – skrypt do szybkiego uruchamiania aplikacji w Windows.
 
-API OpenWeatherMap w darmowej wersji udostępnia jedynie bieżące dane (historyczne i prognozowane są ograniczone). 
+README.md – dokumentacja projektu (ten plik).
 
-Predykcja oparta jest na uproszczonym modelu zależności atmosferycznych. 
+venv/ – wirtualne środowisko (automatycznie generowane, zawiera wszystkie zależności i interpretery Pythona).
 
-Aplikacja nie stanowi naukowego narzędzia analizy jakości powietrza – to prototyp edukacyjny w ramach IoT. 
+Instalacja i uruchomienie
 
- 
+Zainstaluj wymagane biblioteki:
 
-5. Zastosowanie 
+pip install -r requirements.txt
+pip install streamlit-autorefresh
 
-Internet Rzeczy (IoT): demonstracja integracji danych z czujników online, 
+Uruchom aplikację:
 
-RAG + Publisher: pobranie danych → przetworzenie → prezentacja w czasie rzeczywistym, 
+streamlit run app.py
 
-Edukacja: zrozumienie zależności pomiędzy warunkami pogodowymi a jakością powietrza, 
-
-Projekt studencki: przykładowy scenariusz wykorzystania otwartych danych w praktyce. 
-
- 
-
- 
-
- 
-
- 
 
  
